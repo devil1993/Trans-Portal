@@ -2,6 +2,8 @@ from utilities import get_spherical_distance
 import uuid
 import os
 import numpy as np
+from settings import *
+
 def create_skeleton(gps,skel_folder='skeletons'):
 	d = 0
 	id = uuid.uuid4()
@@ -11,7 +13,7 @@ def create_skeleton(gps,skel_folder='skeletons'):
 	n = len(gps)
 	for i in range(n-1):
 		d += get_spherical_distance(gps[i][0],gps[i][1],gps[i+1][0],gps[i+1][1])
-		if (d>100):
+		if (d>skip_rate):
 			skel_file.write("{},{}\n".format(gps[i+1][0],gps[i+1][1]))
 			d=0
 	skel_file.close()
