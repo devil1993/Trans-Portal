@@ -2,11 +2,12 @@ from utilities import get_spherical_distance
 import os
 import numpy as np
 from create_skeleton import create_skeleton_from_file_path
+from settings import *
 
 def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 	data = np.loadtxt(filename,delimiter=',',usecols=usecols,skiprows=1)
 	# pick out some of the data points to try matching
-	fewdata = data[0::100]
+	fewdata = data[0::jump_seconds]
 	# for p in fewdata:
 	# 	print(p)
 	# print(len(fewdata))
@@ -43,7 +44,7 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 
 def find_relation(data_points,skel,close_pairs=None):
 	if close_pairs == None:
-		close_pairs = find_close_points(data_points[0::100],skel)
+		close_pairs = find_close_points(data_points[0::jump_seconds],skel)
 	close_pairs = np.array(close_pairs)
 
 	if(len(close_pairs)<1):
@@ -60,6 +61,7 @@ def find_relation(data_points,skel,close_pairs=None):
 	last_close_skel = close_pairs[-1][0]
 
 	# print(first_close_data,first_close_skel,last_close_data,last_close_skel)
+
 	first_skel_index = np.where(np.all(skel==first_close_skel,axis=1))[0][0]
 	last_skel_index = np.where(np.all(skel==last_close_skel,axis=1))[0][0]
 
@@ -85,6 +87,7 @@ def find_relation(data_points,skel,close_pairs=None):
 		pass
 	else:
 		return 'opposite_direction'
+
 	# Find same route or not
 	# Either non leaving full middle
 	# Or late matching non leaving end
@@ -104,9 +107,8 @@ def find_relation(data_points,skel,close_pairs=None):
 		next_bone_index = np.where(np.all(skel==close_skels[i+1],axis=1))[0][0]
 		# print(this_bone_index,next_bone_index)
 
-		# Allow mismatch upto 300 meters
 		if abs(this_bone_index - next_bone_index)>1:
-			# if skipp is over 1 KM, simply consider a different route:
+			# if skipp is over 2 KM, simply consider a different route:
 			if abs(this_bone_index - next_bone_index)>20:	
 				# print('different route')
 				different_route = True
@@ -120,21 +122,22 @@ def find_relation(data_points,skel,close_pairs=None):
 			index_of_last_found = np.where(np.all(data_points==nearest_data,axis=1))[0][-1]
 			index_of_next_found = np.where(np.all(data_points==next_match_data,axis=1))[0][0]
 			# print(index_of_last_found,index_of_next_found)
-			# jump short steps to fid still in same route or not:
+			
 			found = this_bone_index
 			d = 0
 			for j in range(index_of_last_found,index_of_next_found-1):
 				d += get_spherical_distance(data_points[j][0],data_points[j][1],data_points[j+1][0],data_points[j+1][1])
+				
 				# check if any of the skipped points come up
 				target = found + 4
 				if target > len(skel)-1:
 					target = len(skel)-1
 				for skipped_points in range(found+1,target):
 					distance = get_spherical_distance(data_points[j][0],data_points[j][1],skel[skipped_points][0],skel[skipped_points][1])
-					if distance<=50:
+					if distance<=d2:
 						found = skipped_points
 						d = 0
-				if(d>1000) or found == next_bone_index-1:
+				if(d>d1) or found == next_bone_index-1:
 					break
 			if not (found+1 == next_bone_index):
 				different_route = True
@@ -154,14 +157,14 @@ def find_relation(data_points,skel,close_pairs=None):
 			for i in range(first_data_index,0,-1):
 				if target >= 0:
 					dist_prev_skel = get_spherical_distance(data_points[i][0],data_points[i][1],skel[target][0],skel[target][1])
-					if dist_prev_skel < 50:
+					if dist_prev_skel < d2:
 						first_skel_index = target
 						if target > 0:
 							target -= 1
 						d = 0
 						continue
 				d += get_spherical_distance(data_points[i][0],data_points[i][1],data_points[i-1][0],data_points[i-1][1])
-				if d>1000:
+				if d>d1:
 					far_start = True
 					break
 
@@ -173,14 +176,14 @@ def find_relation(data_points,skel,close_pairs=None):
 			for i in range(last_data_index,len(data_points)-1):
 				if target < len(skel):
 					dist_next_skel = get_spherical_distance(data_points[i][0],data_points[i][1],skel[target][0],skel[target][1])
-					if dist_next_skel < 50:
+					if dist_next_skel < d2:
 						last_skel_index = target
 						if target < len(skel)-1:
 							target += 1
 						d = 0
 						continue
 				d += get_spherical_distance(data_points[i][0],data_points[i][1],data_points[i+1][0],data_points[i+1][1])
-				if d>1000:
+				if d>d1:
 					far_end = True
 					break
 		print('End',d)
@@ -193,6 +196,7 @@ def find_relation(data_points,skel,close_pairs=None):
 			# else we must check wheather it is a overlapping and different route...
 			# in that case, the first and/or last close skeleton points should not be the begining and ending 
 			# point of the skeleton, that case, its a direct different route.
+			
 			# print(first_skel_index,last_skel_index)
 			if(first_skel_index > 0 and last_skel_index < len(skel) -1):
 				return 'different'
@@ -212,7 +216,7 @@ def find_close_points(data,skeleton):
 	for d in data:
 		matched = False
 		for s in skeleton:
-			if get_spherical_distance(d[0],d[1],s[0],s[1])<60:
+			if get_spherical_distance(d[0],d[1],s[0],s[1])<d2:
 				points.append([s,d])
 				matched= True
 				break
