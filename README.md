@@ -23,4 +23,4 @@ Steps and description:
  	Code file: create_skeleton.py
  	Creates a skeleton of a given GPS trails. A skeleton is a trace of GPS points with a minimum gap of 100 meters.
 
- 	> TODO: keep track of a minimum distance of a trail to avoid creation of small insignificant routes.
+ 	> ~~TODO: keep track of a minimum distance of a trail to avoid creation of small insignificant routes.~~Done

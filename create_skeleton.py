@@ -6,17 +6,23 @@ from settings import *
 
 def create_skeleton(gps,skel_folder='skeletons'):
 	d = 0
+	trail_length = 0
 	id = uuid.uuid4()
 	path = os.path.join(skel_folder,str(id))
 	print(path)
 	skel_file = open(path,'w')
 	n = len(gps)
 	for i in range(n-1):
-		d += get_spherical_distance(gps[i][0],gps[i][1],gps[i+1][0],gps[i+1][1])
+		step = get_spherical_distance(gps[i][0],gps[i][1],gps[i+1][0],gps[i+1][1])
+		d += step
+		trail_length += step
 		if (d>skip_rate):
 			skel_file.write("{},{}\n".format(gps[i+1][0],gps[i+1][1]))
 			d=0
 	skel_file.close()
+	if trail_length < min_route_length:
+		os.remove(path)
+		return None
 	return str(id)
 
 def create_skeleton_from_file_path(file_path,usecols = (0,1),folder='skeletons'):

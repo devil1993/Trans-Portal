@@ -12,6 +12,7 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 	# 	print(p)
 	# print(len(fewdata))
 	create_new = True
+	to_remove = []
 	skeletons = os.listdir(skel_folder)
 	curdir = os.getcwd()
 	os.chdir(skel_folder)
@@ -36,11 +37,16 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 			break
 		if result == 'superroute':
 			print('Removing',skeleton,'for',filename)
-			os.remove(skeleton)
+			to_remove.append(skeleton)
 	os.chdir(curdir)
 	if create_new:
 		sk = create_skeleton_from_file_path(filename)
+		if (sk == None):
+			print('Skeleton','not','created')
+			return	
 		print('Skeleton',sk,'created')
+		for file in to_remove:
+			os.remove(file)
 
 def find_relation(data_points,skel,close_pairs=None):
 	if close_pairs == None:
