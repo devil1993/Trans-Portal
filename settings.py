@@ -8,3 +8,7 @@ d1 = 1000 # meters
 d2 = 60 # meters
 # minimum length of a route
 min_route_length = 8000 # meters
+# Define distance and angle that can be interpolared
+allowed_distance = 50 # meters
+allowed_time = 10 # seconds
+allowed_angle = 15 # degrees
