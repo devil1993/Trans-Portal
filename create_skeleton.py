@@ -20,6 +20,9 @@ def create_skeleton(gps,skel_folder='skeletons'):
 			skel_file.write("{},{}\n".format(gps[i+1][0],gps[i+1][1]))
 			d=0
 	skel_file.close()
+	routes_folder = os.path.join(data_location,'routes')
+	# if(not os.path.exists(routes_folder)):
+	os.makedirs(os.path.join(routes_folder,str(id)))
 	if trail_length < min_route_length:
 		os.remove(path)
 		return None

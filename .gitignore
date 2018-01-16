@@ -99,3 +99,11 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# project specific
+FirebaseConfig/
+file_stream/
+firebase_config.py
+archives/
+routes/
+skeletons/

@@ -12,3 +12,5 @@ min_route_length = 8000 # meters
 allowed_distance = 50 # meters
 allowed_time = 10 # seconds
 allowed_angle = 15 # degrees
+# Data file location
+data_location = 'F:/m.tech/Project'

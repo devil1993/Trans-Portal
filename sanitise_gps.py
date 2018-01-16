@@ -18,9 +18,16 @@ def get_time(timestring):
 	time_units = str(timestring).split(':')
 	return int(time_units[0])*3600+int(time_units[1])*60+int(time_units[2])
 
-def check_jumps(data):
+def break_down(part,file_name,pos):
+	global gps
+
+
+def check_jumps(data, file_name):
 	global gps
 	arr_data = list(data)
+	part = 1
+	interpolated = False
+	file = open(file_name + '_part_' + str(part),'w')
 	for i in range(len(arr_data)-1):
 		td = get_time(arr_data[i+1] - get_time(arr_data[i]))
 		if (td==1):
@@ -37,18 +44,36 @@ def check_jumps(data):
 				diff_ang = abs(a1-a2)
 				if(diff_ang<allowed_angle):
 					# Do interpolation
+					if not interpolated:
+						interpolated = True
+					lats_between = np.arange(gps[i][0],gps[i+1][0],(gps[i+1][0]-gps[i][0])/td)
+					longs_between = np.arange(gps[i][1],gps[i+1][1],(gps[i+1][1]-gps[i][1])/td)
+					gps = list(gps[:i]) + list(np.transpose(np.array([lats_between,longs_between]))) + list(gps[i:])
+				else:
+					break_down(part, file_name, i)
+					part += 1
+			else:
+				break_down(part)
+				part += 1
+		else:
+			break_down(part)
+			part += 1
+	if(part > 1):
+		# indicates that the trail has not been partitioned
+		# nothing to do, exit
+		return False
 
 def sanitise_gps_from_time(file_name,dtype = {'names':('time',),'formats':('S8',)}):
 	data = np.loadtxt(file_name,dtype=dtype,usecols=(2),delimiter=',',skiprows=1)
 	# print(data)
-	return check_jumps(data)
+	return check_jumps(data, file_name)
 
 def sanitize_gps_from_date_time(file_name, dtype = {'names':('time',),'formats':('S19',)},usecols = 4):
 	data = np.loadtxt(file_name,dtype=dtype,usecols=usecols,delimiter=',',skiprows=1)
 	# print(data)
 	times = [str(d).split(' ')[1] for d in data]
 	# print(times)
-	return check_jumps(times)
+	return check_jumps(times, file_name)
 
 if __name__ == '__main__':
 	import sys
