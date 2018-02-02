@@ -22,6 +22,7 @@ def break_down(part,file_name,pos):
 	global gps
 
 
+
 def check_jumps(data, file_name):
 	global gps
 	arr_data = list(data)
@@ -31,7 +32,7 @@ def check_jumps(data, file_name):
 	for i in range(len(arr_data)-1):
 		td = get_time(arr_data[i+1] - get_time(arr_data[i]))
 		if (td==1):
-			continue
+			file.write(gps)
 		elif(td >1 and td<allowed_time):
 			# try interpolation
 			if (len(gps)==0):
