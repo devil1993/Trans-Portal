@@ -2,7 +2,7 @@ import sys
 import os
 import glob
 
-def main(uid, folder = '.'):
+def merge(uid, folder = '.'):
 	
 	curdir = os.getcwd()
 	os.chdir(folder)
@@ -60,6 +60,7 @@ def main(uid, folder = '.'):
 		info = gps[i][3]
 		alt = gps[i][4]
 
+		mark = -1
 		while (j<len(marking) and marking[j][1]<=time):
 			if(marking[j][1]==time):
 				mark = marking[j][0]
@@ -82,4 +83,4 @@ def main(uid, folder = '.'):
 	os.chdir(curdir)
 	
 if __name__ == '__main__':
-	main('94bb3ec4-0821-4149-831b-308a4cd6929a','./firebase_content/')
+	merge('94bb3ec4-0821-4149-831b-308a4cd6929a','./firebase_content/')
