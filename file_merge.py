@@ -3,15 +3,15 @@ import os
 import glob
 
 def merge(uid, folder = '.'):
-	
 	curdir = os.getcwd()
 	os.chdir(folder)
 	
-	gps_strings = None
-	wifi_strings = None
-	marking_strings = None
+	gps_strings = []
+	wifi_strings = []
+	marking_strings = []
 
 	files = glob.glob('*'+uid+'*')
+	print(files	)
 	for file in files:
 		if (file.find('gps') >= 0 or file.find('GPS')>= 0):
 			_file = open(file,'r')
@@ -53,6 +53,8 @@ def merge(uid, folder = '.'):
 	k=0
 	res = []
 
+	print(gps_strings)
+
 	for i in range(0,len(gps)):
 		lat = gps[i][0]
 		lng = gps[i][1]
@@ -74,6 +76,7 @@ def merge(uid, folder = '.'):
 		res = res + [(lat,lng,time,mark,wifi_data,info,alt)]
 	
 	file = open(uid+'.txt','w')
+	print(res)
 	try:
 		for result in res:		
 			file.write(result[0]+','+result[1]+','+result[2]+','+str(result[3])+','+str(result[5])+','+str(result[6])+','+str(result[4])+'\n')			
@@ -82,5 +85,5 @@ def merge(uid, folder = '.'):
 	file.close()
 	os.chdir(curdir)
 	
-if __name__ == '__main__':
-	merge('94bb3ec4-0821-4149-831b-308a4cd6929a','./firebase_content/')
+# if __name__ == '__main__':
+# 	merge('94bb3ec4-0821-4149-831b-308a4cd6929a','./firebase_content/')

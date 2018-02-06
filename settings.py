@@ -14,3 +14,7 @@ allowed_time = 10 # seconds
 allowed_angle = 15 # degrees
 # Data file location
 data_location = 'F:/m.tech/Project'
+# BusStopFinderCodeLocation
+bsf_location = '../BusStopage/Busstop/'
+# Feature Extraction Code Location
+fa_location = '../RoadNatureDetection/'

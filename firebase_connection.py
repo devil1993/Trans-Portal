@@ -4,7 +4,8 @@ from settings import *
 
 def get_new_files(config,storagepath='file_stream',dbpath="files"):
 	firebase = pyrebase.initialize_app(config)
-
+	if not storagepath.endswith('/'):
+		storagepath += '/'
 	db = firebase.database()
 	storage = firebase.storage()
 
@@ -20,7 +21,7 @@ def get_new_files(config,storagepath='file_stream',dbpath="files"):
 		for f in files.each():
 			l = f.val()
 			key = f.key()
-			storage.child(l).download(storagepath+'/'+l)
+			storage.child(l).download(storagepath+l)
 			db.child(dbpath).child(key).remove()
 			storage.delete(l)
 	except Exception as e:
