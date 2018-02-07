@@ -3,13 +3,14 @@ from file_merge import merge
 from check_skeleton import check_skeleton
 from settings import *
 from firebase_connection import get_new_files
+from BusStopFinder import *
 
 # Dump data from firebase
 
 file_location = './file_stream/'
 
-# from firebase_config import config
-# get_new_files(config,file_location)
+from firebase_config import config
+get_new_files(config,file_location)
 
 # i = input()
 
@@ -36,6 +37,7 @@ for id in ids:
 		os.rename(file_location+id+'.txt',merged_file_location+id+'.txt')
 	except Exception as e:
 		print(e)
+
 
 trails = os.listdir(merged_file_location)
 for id in trails:

@@ -5,7 +5,7 @@ from create_skeleton import create_skeleton_from_file_path
 from settings import *
 from shutil import copy
 
-def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1),archive_folder = 'archive'):
+def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 	print(filename)
 	data = np.loadtxt(filename,delimiter=',',usecols=usecols,skiprows=1)
 	# pick out some of the data points to try matching
@@ -17,11 +17,26 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1),archive_folder
 	to_remove = []
 	if (not os.path.exists(skel_folder)):
 		os.makedirs(skel_folder)
-	if (not os.path.exists(archive_folder)):
-		os.makedirs(archive_folder)
 	skeletons = os.listdir(skel_folder)
 	curdir = os.getcwd()
 	os.chdir(skel_folder)
+
+	archive_folder = archive
+	if archive_folder.startswith('..'):
+		print('Archive folder should not start with ..\n')
+	elif archive_folder.startswith('.'):
+		archive_folder = archive_folder[2:]
+		arch = os.path.join(curdir,archive_folder)
+	elif archive_folder.startswith('/'):
+		arch = archive_folder
+	else:
+		arch = os.path.join(curdir,archive_folder)
+	
+	if (not os.path.exists(arch)):
+		os.makedirs(arch)
+	if (not os.path.exists(os.path.join(curdir,'routes'))):
+		os.makedirs(os.path.join(curdir,'routes'))
+	
 	matches = []
 	for skeleton in skeletons:
 		print('For Skeleton',skeleton)
@@ -47,6 +62,10 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1),archive_folder
 			to_remove.append(skeleton)
 	os.chdir(curdir)
 	sk = None
+	parts = filename.split(os.path.sep)
+	if(len(parts) == 1):
+		parts = filename.split('/')
+	
 	if create_new:
 		sk = create_skeleton_from_file_path(filename)
 		if (sk == None):
@@ -54,10 +73,11 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1),archive_folder
 		else:	
 			print('Skeleton',sk,'created')
 			# print(filename)
-			copy(filename,os.path.join('routes',sk,filename.split(os.path.sep)[-1]))
+			os.makedirs(os.path.join(curdir,'routes',sk))
+			copy(filename,os.path.join(curdir,'routes',sk,parts[-1]))
 	else:
 		for match in matches:
-			copy(filename,os.path.join('routes',match,filename.split(os.path.sep)[-1]))
+			copy(filename,os.path.join(curdir,'routes',match,parts[-1]))
 	for file in to_remove:
 		# Replace all trails in routes that going to be deleted into the newly created routes folder/matching folder
 		# get the trails in the route that is to be deleted
@@ -70,7 +90,7 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1),archive_folder
 		os.remove(file)
 		os.rmdir(route_path)
 	# Move current file to archive folder
-	os.rename(filename,os.path.join(archive_folder,filename.split(os.path.sep)[-1]))
+	os.rename(filename,os.path.join(arch,parts[-1]))
 
 def find_relation(data_points,skel,close_pairs=None):
 	if close_pairs == None:

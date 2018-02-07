@@ -19,12 +19,15 @@ def get_new_files(config,storagepath='file_stream',dbpath="files"):
 		files = db.child(dbpath).get()
 		l = []
 		for f in files.each():
-			l = f.val()
-			key = f.key()
-			print(l)
-			storage.child(l).download(storagepath+l)
-			db.child(dbpath).child(key).remove()
-			storage.delete(l)
+			try:
+				l = f.val()
+				key = f.key()
+				print(l)
+				storage.child(l).download(storagepath+l)
+				db.child(dbpath).child(key).remove()
+				storage.delete(l)
+			except Exception as e:
+				print(e)
 	except Exception as e:
 		print(e)
 		pass

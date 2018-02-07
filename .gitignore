@@ -104,7 +104,7 @@ ENV/
 FirebaseConfig/
 file_stream/
 firebase_config.py
-archives/
+archive/
 routes/
 skeletons/
 firebase_conntent/

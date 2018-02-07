@@ -18,3 +18,5 @@ data_location = 'F:/m.tech/Project'
 bsf_location = '../BusStopage/Busstop/'
 # Feature Extraction Code Location
 fa_location = '../RoadNatureDetection/'
+# archive location
+archive = './archive/'
