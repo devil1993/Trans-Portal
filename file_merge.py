@@ -83,6 +83,9 @@ def merge(uid, folder = '.'):
 	except Exception as e:
 		print(e)
 	file.close()
+	for file in files:
+		os.remove(file)
+
 	os.chdir(curdir)
 	
 # if __name__ == '__main__':
