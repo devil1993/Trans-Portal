@@ -112,9 +112,30 @@ def findStops(folderName,tc,speed_threshold, stopRadi,stopFileName):
 			print(len(p))
 			mean = np.mean(p,axis=0)
 			res.append(mean)
-
+	print(len(res))
 	for r in res:
 		print(r[0],',',r[1])
+	return res
 
 if __name__ == '__main__':
-	findStops('G:/Repos/BusStoppage/Busstop/trails/A',0.5,0,30,'stop.txt')
+	detected = findStops('G:/BusStopFinderStuff/Code/input/GPS_Trails/8B_final/up_8B',0.25,0,30,'stop.txt')
+	# actual = np.loadtxt("G:/BusStopFinderStuff/Code/groundtruth/8B_GT_SS(1).txt",delimiter=',',usecols=(1,2),skiprows=1)
+	# actual = actual.tolist()
+	# found = len(detected)
+	# tobe = len(actual)
+	# tp = 0
+	# fp = 0
+	# fn = 0
+	# for d in detected:
+	# 	match = False
+	# 	for a in actual:
+	# 		if (get_spherical_distance(d[0],d[1],a[0],a[1])<50):
+	# 			tp += 1
+	# 			actual.remove(a)
+	# 			match = True
+	# 			break
+	# 	if not match:
+	# 		fp += 1
+	# fn = len(actual)
+
+	# print(tobe,found,tp,fp,fn)

@@ -22,7 +22,7 @@ ids = []
 for file in files:
 	identifiers = file.split('.')[0].split('_')
 	id = identifiers[-1]
-	if (id not in ids) and ('bus' in identifiers):
+	if (id not in ids) and (('bus' in identifiers) or ('BUS' in identifiers)):
 		ids.append(id) 
 
 print(ids)
