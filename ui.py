@@ -16,7 +16,7 @@ def downloadFromFirebase(f_loc):
 	dwnld= get_new_files(config,file_loc)
 	# dwnld = ['a','s','d','f']
 	global msg1
-	msg.set(str(len(dwnld)) + ' files downloaded in: ' + file_loc)
+	msg1.set(str(len(dwnld)) + ' files downloaded in: ' + file_loc)
 	files = ''
 	for f in dwnld:
 		files += f + '\n'
@@ -48,16 +48,31 @@ def mergeFiles(file_loc,file_location):
 			showinfo('Window','Exception in merging and archiving '+str(id)+'\n'+str(e))
 
 def routeAnalysis(merged_file_location):
+	global msg3
 	try:
 		trails = os.listdir(merged_file_location)
 		for id in trails:
+			msg3.set('Processing file: ' + id)
 			try:
 				check_skeleton(merged_file_location+id)
 			except Exception as e:
+				if(str(e).strip() == ''):
+					pass
+				else:
+					raise e
 				showinfo('Window','Exception in route analysis of '+str(id)+'\n'+str(e))
 	except Exception as e:
 		showinfo('Window','Exception in route analysis.\n'+str(e))
+		raise e
 
+def findBusStops():
+	routes = os.listdir('routes')
+	base_folder = os.path.abspath('routes')
+	for route in routes:
+		try:
+			findStops(os.path.join(base_folder,route),0.25,1,30,'stops.txt')
+		except Exception as e:
+			showinfo('Window','Exception in route analysis.\n'+str(e))
 
 window = Tk()
 
@@ -107,6 +122,13 @@ label.grid(column=1, row=6, sticky=W)
 
 # merged_file_location.set('./merged_file_stream/')
 
+# ===================================================================Executing BusStopFinder ========================================================
+msg4 = StringVar()
+
+ttk.Button(mainframe, text="Find bus stops in all the routes", command=lambda:findBusStops()).grid(column=1, row=10, sticky=W)
+
+label = ttk.Label(mainframe, textvariable = msg4)
+label.grid(column=1, row=9, sticky=W)
 
 
 # feet = StringVar()

@@ -4,15 +4,18 @@ import numpy as np
 from create_skeleton import create_skeleton_from_file_path
 from settings import *
 from shutil import copy
+import codecs
 
 def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 	print(filename)
-	data = np.loadtxt(filename,delimiter=',',usecols=usecols,skiprows=1)
+	filecp = codecs.open(filename, 'rb') #encoding = 'cp1252'
+	data = np.loadtxt(filecp,delimiter=',',usecols=usecols,skiprows=1)
+	filecp.close()
 	# pick out some of the data points to try matching
 	fewdata = data[0::jump_seconds]
 	# for p in fewdata:
 	# 	print(p)
-	# print(len(fewdata))
+	print(len(fewdata))
 	create_new = True
 	to_remove = []
 	if (not os.path.exists(skel_folder)):

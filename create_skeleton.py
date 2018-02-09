@@ -29,7 +29,8 @@ def create_skeleton(gps,skel_folder='skeletons'):
 	return str(id)
 
 def create_skeleton_from_file_path(file_path,usecols = (0,1),folder='skeletons'):
-	gps = np.loadtxt(file_path,delimiter=',',usecols=usecols,skiprows=1)
+	file = open(file_path,'rb')
+	gps = np.loadtxt(file,delimiter=',',usecols=usecols,skiprows=1)
 	return create_skeleton(gps,folder)
 if __name__ == '__main__':
 	create_skeleton_from_file_path('up_1.txt')

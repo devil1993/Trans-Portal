@@ -28,9 +28,15 @@ def get_neighbours(point,pointSet,eps):
 	return N
 
 def findStops(folderName,tc,speed_threshold, stopRadi,stopFileName):
+	if(len(stopFileName.split('.'))>1):
+		stopFileName = stopFileName.split('.')[0] + '.stop'
 	files = os.listdir(folderName)
 	slow_points = []
+	stopfilecount = 0
 	for file in files:
+		if(file.endswith('.stop')):
+			stopfilecount += 1
+			continue
 		slows = []
 		slowsets = []
 		f = open(os.path.join(folderName,file),'r')
@@ -108,13 +114,22 @@ def findStops(folderName,tc,speed_threshold, stopRadi,stopFileName):
 		ps.append(C)
 	res = []
 	for p in ps:
-		if(len(p)>tc*len(files)):
+		if(len(p)>tc*(len(files)-stopfilecount)):
 			print(len(p))
 			mean = np.mean(p,axis=0)
 			res.append(mean)
 	print(len(res))
-	for r in res:
-		print(r[0],',',r[1])
+	# for r in res:
+	# 	print(r[0],',',r[1])
+	# return res
+
+	file = open(os.path.join(folderName,stopFileName),'w')
+	for i in range(len(res)):
+		file.write(str(res[i][0])+','+str(res[i][1])+'\n')
+		# res.find(s)==(len(res)-1)
+		if(i==(len(res)-1)):
+			file.write(str(res[i][0])+','+str(res[i][1]))
+	file.close()
 	return res
 
 if __name__ == '__main__':
