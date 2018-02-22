@@ -76,7 +76,10 @@ def check_skeleton(filename,skel_folder='skeletons',usecols=(0,1)):
 		else:	
 			print('Skeleton',sk,'created')
 			# print(filename)
-			os.makedirs(os.path.join(curdir,'routes',sk))
+			try:
+				os.makedirs(os.path.join(curdir,'routes',sk))
+			except Exception as e:
+				print(e)
 			copy(filename,os.path.join(curdir,'routes',sk,parts[-1]))
 	else:
 		for match in matches:
@@ -269,6 +272,7 @@ def find_close_points(data,skeleton):
 	for d in data:
 		matched = False
 		for s in skeleton:
+			# print(d,s)
 			if get_spherical_distance(d[0],d[1],s[0],s[1])<d2:
 				points.append([s,d])
 				matched= True

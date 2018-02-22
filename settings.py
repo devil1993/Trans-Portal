@@ -9,11 +9,11 @@ d2 = 60 # meters
 # minimum length of a route
 min_route_length = 8000 # meters
 # Define distance and angle that can be interpolared
-allowed_distance = 50 # meters
+allowed_distance = 100 # meters 
 allowed_time = 10 # seconds
 allowed_angle = 15 # degrees
 # Data file location
-data_location = 'F:/m.tech/Project'
+data_location = 'G:/Repos/Trans-Portal'
 # BusStopFinderCodeLocation
 bsf_location = '../BusStopage/Busstop/'
 # Feature Extraction Code Location

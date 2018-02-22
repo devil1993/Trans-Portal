@@ -5,8 +5,9 @@ from settings import *
 
 def merge(uid, folder = '.'):
 	curdir = os.getcwd()
+	print(curdir,folder)
 	os.chdir(folder)
-	
+	print('HI')
 	gps_strings = []
 	wifi_strings = []
 	marking_strings = []

@@ -24,8 +24,10 @@ def downloadFromFirebase(f_loc):
 
 def mergeFiles(file_loc,file_location):
 	merged_file_location = file_loc.get()
-	files = os.listdir(file_location)
 	curdir = os.getcwd()
+	print(curdir)
+	files = os.listdir(file_location)
+	
 
 	ids = []
 	for file in files:
@@ -45,7 +47,9 @@ def mergeFiles(file_loc,file_location):
 			merge(id,file_location)
 			os.rename(file_location+id+'.txt',merged_file_location+id+'.txt')
 		except Exception as e:
-			showinfo('Window','Exception in merging and archiving '+str(id)+'\n'+str(e))
+			os.chdir(curdir)
+			print(id,e)
+			# showinfo('Window','Exception in merging and archiving '+str(id)+'\n'+str(e))
 
 def routeAnalysis(merged_file_location):
 	global msg3

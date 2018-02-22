@@ -109,3 +109,4 @@ routes/
 skeletons/
 firebase_conntent/
 merged_file_stream/
+*.txt
